@@ -1,0 +1,611 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
+#include "mediatheque.cpp"
+#include "Document.cpp"
+#include "Client.cpp"
+#include "Audio.cpp"
+#include "Video.cpp"
+#include "Livre.cpp"
+#include "CategorieClient.cpp"
+#include "FicheEmprunt.cpp"
+#include "Genre.cpp"
+#include "Localisation.cpp"
+#include <string>
+#include <conio.h>
+using namespace std;
+
+
+void gotoxy(int x, int y)
+{
+    HANDLE H = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD point; // COORD est predefinie dans la biblio windwos.h
+    point.X = (SHORT)x;
+    point.Y = (SHORT)y;
+    SetConsoleCursorPosition(H, point);
+}
+
+/****************************************************/
+void Color(int flags)
+{
+    HANDLE H = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(H, (WORD)flags);
+}
+void image()
+{
+    FILE* fichier;
+   // char ch[100];
+    int i;
+    int key=-1;
+    gotoxy(10,4);
+    fichier=fopen("livre_image.txt","r+");
+    if (fichier==NULL)
+        exit(1);
+
+    Color(14);
+    while (1)
+    {
+        i = fgetc(fichier);
+        if (feof(fichier))
+            break;
+        printf("%c",i);
+    }
+    fclose(fichier);
+    //Color(5);
+     //getch();
+   //system("cls");
+
+}
+
+/****************************************************/
+void loading()
+{
+    int i;
+    long double c;
+    int f = 25;
+    gotoxy(30, 15);
+    Color(4);
+    printf("Loading...");
+    for (i = 0; i < 18; i++)
+    {
+        for (c = 0; c < 40000000; c++)
+        {
+        }
+        gotoxy(f, 16);
+        Color(1);
+        printf("%c", 180);
+        f++;
+    }
+    system("cls");
+}
+/****************************************************/
+void init_stade()
+{
+    int j;
+    int i;
+    char ch[71][31];
+    for (i = 20; i <= 70; i++)
+    {
+        for (j = 3; j <= 30; j++)
+        {
+            if ((i == 20) || (j == 3) || (j == 30) || (i == 70))
+            {
+                ch[i][j] = 177;
+                gotoxy(i, j);
+                Color(FOREGROUND_RED);
+                printf("%c", ch[i][j]);
+            }
+        }
+    }
+}
+
+int main()
+{
+
+image();
+loading();
+Mediatheque M("Maktba");
+    while (true)
+    {
+        char c = '1';
+        char c1 = '1';
+        char c2 = '1';
+        char c3 = '1';
+        init_stade();
+        gotoxy(30, 8);
+        Color(1);
+        cout << "****************************** \n"
+             << endl;
+        gotoxy(29, 9);
+        Color(4);
+        cout << "Bienvenue dans notre mediatheque \n"
+             << endl;
+        gotoxy(30, 10);
+        Color(1);
+        cout << "****************************** \n"
+             << endl;
+        gotoxy(27, 14);
+        Color(3);
+        cout << "choisir l'une des propositions suivantes :\n"
+             << endl;
+        gotoxy(30, 15);
+        cout << "1:Espace client" << endl;
+        gotoxy(30, 16);
+        cout << "2:Espace employe \n"
+             << endl;
+        gotoxy(30, 17);
+        fflush(stdin);
+        cout << "Choix:  ";
+        c = getchar();
+        system("cls");
+        switch (c)
+        {
+        case '1':
+
+            while (c1 != '4')
+            {
+                init_stade();
+                gotoxy(30, 8);
+                Color(14);
+                cout << "****************************** \n"
+                     << endl;
+                gotoxy(29, 9);
+                Color(4);
+                cout << "          ESPACE CLIENT \n"
+                     << endl;
+                gotoxy(30, 10);
+                Color(14);
+                cout << "****************************** \n"
+                     << endl;
+                gotoxy(27, 14);
+                Color(3);
+                cout << "choisir l'une des propositions suivantes :\n"
+                     << endl;
+                gotoxy(30, 15);
+                Color(14);
+                cout << "1:Consulter catalogue document" << endl;
+                gotoxy(30, 16);
+                cout << "2:Changer l'adresse" << endl;
+                gotoxy(30, 17);
+                cout << "3:Consulter les emprunts" << endl;
+                gotoxy(30, 18);
+                cout << "4: Revenir au menu principale" << endl;
+                gotoxy(30, 19);
+                fflush(stdin);
+                cout << "Choix:  ";
+                c1 = getchar();
+                system("cls");
+                switch (c1)
+                { case '1' :
+                    {
+
+                         system("cls");
+                         fflush(stdin);
+                         M.consulterCatalogueDocuments();
+                         system("cls");
+                         break ;
+                    }
+                  case '2':
+                        {
+                            system ("cls");
+                        fflush (stdin);
+                        string adresse,Ci;
+                        cout << "pour quel client voulez vous changer l'adresse ? veuillez entrer son cin  ! "<<endl ;
+                        cin >> Ci ;
+                        cout << "quelle est la nouvelle adresse ?" <<endl ;
+                        cin >> adresse ;
+                        M.changerAdresseClient(&M.chercher_client(Ci),adresse);
+                        system("cls") ;
+                        break ;
+                        }
+                  case '3':
+                        {
+                        system ("cls");
+                        fflush (stdin);
+                        string Ci;
+                        cout << "pour quel client voulez vous afficher les liste des emprunts ? veuillez entrer son cin ! "<<endl ;
+                        cin >> Ci ;
+                        M.consulterEmpruntsClient (&M.chercher_client(Ci));
+                        system("cls") ;
+                        break ;
+                        }
+                  default :
+                        c='1';
+                        break ;
+
+                }
+            }
+            break;
+
+        case '2':
+            while (c2 != '3')
+            {
+                c3 = 1;
+                init_stade();
+                gotoxy(30, 8);
+                Color(14);
+                cout << "****************************** \n"
+                     << endl;
+                gotoxy(29, 9);
+                Color(4);
+                cout << "          ESPACE EMPLOYEE \n"
+                     << endl;
+                gotoxy(30, 10);
+                Color(14);
+                cout << "****************************** \n"
+                     << endl;
+                gotoxy(27, 14);
+                Color(1);
+                cout << "choisir l'une des propositions suivantes :\n"
+                     << endl;
+                gotoxy(30, 15);
+                Color(14);
+
+                cout << "1:Gestion clients" << endl;
+                gotoxy(30, 16);
+                cout << "2:Gestion documents" << endl;
+                gotoxy(30, 17);
+                cout << "3: Retour" << endl;
+                gotoxy(30, 18);
+                fflush(stdin);
+                cout << "Choix:  ";
+                c2 = getchar();
+                system("cls");
+
+                switch (c2)
+                {
+                case '1':
+                    while (c3 != '0')
+                    {
+                        init_stade();
+                        gotoxy(30, 8);
+                        Color(14);
+                        cout << "choisir l'une des options suivantes" << endl;
+                        gotoxy(30, 9);
+                        cout << "1: Ajouter categorie client" << endl;
+                        gotoxy(30, 10);
+                        cout << "2: Changer categorie client" << endl;
+                        gotoxy(30, 11);
+                        cout << "3: Supprimer categorie client" << endl;
+                        gotoxy(30, 12);
+                        cout << "4: Inscrire client ";
+                        gotoxy(30, 13);
+                        cout << "5: Afficher caracteristique client" << endl;
+                        gotoxy(30, 14);
+                        cout << "6: Modifier carateristiques client" << endl;
+                        gotoxy(30, 15);
+                        cout << "7: Renouveler inscription client " << endl;
+                        gotoxy(30, 16);
+                        cout << "8: Resiliser client " << endl;
+                        gotoxy(30, 17);
+                        cout << "0: Retour" << endl;
+                        gotoxy(30, 18);
+                        cout << "Choix:  ";
+                        fflush(stdin);
+                        c3 = getchar();
+                        system("cls");
+                        switch(c3)
+                               { case '1':
+                                   {
+
+                                       system("cls");
+                                       fflush(stdin);
+                                       Categorie_Client CC1("Tarif Reduit",2,0.5,0.5,1);
+
+                                       M.ajouterCategorieClient(&CC1);
+                                       system("cls") ;
+                                       break ;
+                                   }
+
+                                case '2':
+                                       {
+                                       system("cls");
+                                       fflush(stdin);
+                                       int e;string a;
+        cout<<"\t\t\t--------------------------------------------------------------------------\n";
+        cout<<"\t\t\t|               ****** Changement Categorie Client ******                |\n";
+        cout<<"\t\t\t--------------------------------------------------------------------------\n";
+        cout<<"\t\t\t           Veuillez remplir les informations suivantes:"<<endl;
+        cout<<"\t\t\t     Numero CIN (8 chiffres) du client: ";
+        cin>>a;
+        cout<<"\t\t\t     Nouvelle categorie(1- Tarif Normal, 2- Tarif Reduit, 3- Abonnee): ";
+        cin>>e;
+
+        while ((e!=1)&&(e!=2)&&(e!=3))
+        {
+            cout<<"\t\t\t     Choix non valide !"<<endl;
+            cout<<"\t\t\t     Veuillez tapez le numero de categorie de nouveau: ";
+            cin>>e;
+        }
+        string f;
+        switch(e)
+        {
+        case 1:{f="Tarif Normal";break;}
+        case 2:{f="Tarif Reduit";break;}
+        case 3:{f="Abonne";break;}
+        }
+        if ((&M.chercher_client(a)==NULL))
+        {
+            cout<<"\t\t\t--------------------------------------------------------------------------\n";
+            cout<<"\t\t\t|         Client introuvable, veuillez verifier le CIN donnee...         |"<<endl;
+            cout<<"\t\t\t--------------------------------------------------------------------------\n";
+        }
+        else
+        {
+                M.changerClientCategorie(&M.chercher_client(a),&M.chercher_CategClient(f));
+        }
+
+                                       system ("cls") ;
+                                       break ;
+                                       }
+                                case '3' :
+                                    {
+
+                                    system("cls");
+                                     fflush(stdin);
+                                     string a;
+        cout<<"\t\t\t--------------------------------------------------------------------------\n";
+        cout<<"\t\t\t|               ****** Suppression Categorie Client ******                |\n";
+        cout<<"\t\t\t--------------------------------------------------------------------------\n";
+        cout<<"\t\t\t           Veuillez remplir les informations suivantes:"<<endl;
+        cout<<"\t\t\t     Nom de la categorie à supprimer: ";
+        cin>>a;
+                                     M.supprimerCategorieClient(&M.chercher_CategClient(a));
+                                     system ("cls") ;
+                                     break ;
+                                    }
+                                case '4' :
+                                    {
+
+                                      system("cls");
+                                      fflush(stdin);
+                                      int e;
+                                      string a,b,c,d;
+                                      cout<<"\t\t\t--------------------------------------------------------------------------\n";
+                                      cout<<"\t\t\t|                     ****** Inscription Client ******                   |\n";
+                                      cout<<"\t\t\t--------------------------------------------------------------------------\n";
+                                      cout<<"\t\t\t           Veuillez remplir les informations suivantes du client:"<<endl;
+                                      cout<<"\t\t\t     Numero CIN (8 chiffres): ";
+                                      cin>>a;
+                                      while ((&M.chercher_client(a)!=NULL)||(a.size()!=8))
+                                     {
+                                        if (a.size()!=8)
+                                        {cout<<"\t\t\t     Le CIN doit contenir 8 chiffres !"<<endl;}
+                                        else
+                                        {
+                                         cout<<"\t\t\t     Le CIN donne existe deja !"<<endl;
+                                        }
+                                         cout<<"\t\t\t     Veuillez tapez le CIN de nouveau: ";
+                                         cin>>a;
+                                        }
+                                         cout<<"\t\t\t     Nom: ";
+                                         cin>>b;
+                                         cout<<"\t\t\t     Prenom: ";
+                                         cin>>c;
+                                         cout<<"\t\t\t     Adresse: ";
+                                         cin>>d;
+                                         cout<<"\t\t\t     Categorie(1- Tarif Normal, 2- Tarif Reduit, 3- Abonnee): ";
+                                         cin>>e;
+                                        while ((e!=1)&&(e!=2)&&(e!=3))
+                                              {
+                                                cout<<"\t\t\t     Choix non valide !"<<endl;
+                                                cout<<"\t\t\t     Veuillez tapez le numero de categorie de nouveau: ";
+                                                cin>>e;
+                                            }
+                                         string f;
+                                         switch(e)
+                                            {
+                                                case 1:{f="Tarif Normal";break;}
+                                                case 2:{f="Tarif Reduit";break;}
+                                                case 3:{f="Abonne";break;}
+                                             }
+                                        Client C1(a,b,c,d,&M.chercher_CategClient(f));
+                                        M.inscrireClient(&C1);
+
+                                      system ("cls") ;
+                                      break ;
+                                    }
+
+                                case '5' :
+                                     {
+
+                                      system("cls") ;
+                                      fflush(stdin) ;
+                                string a;
+        cout<<"\t\t\t--------------------------------------------------------------------------\n";
+        cout<<"\t\t\t|                 ****** Caracteristiques Client ******                  |\n";
+        cout<<"\t\t\t--------------------------------------------------------------------------\n";
+        cout<<"\t\t\t           Veuillez donner le CIN du client: ";
+        cin>>a;
+        system("cls");
+        cout<<"\t\t\t--------------------------------------------------------------------------\n";
+        cout<<"\t\t\t|                 ****** Caracteristiques Client ******                  |\n";
+        cout<<"\t\t\t--------------------------------------------------------------------------\n";
+            if ((&M.chercher_client(a)==NULL))
+        {
+            cout<<"\t\t\t--------------------------------------------------------------------------\n";
+            cout<<"\t\t\t|         Client introuvable, veuillez verifier le CIN donnee...         |"<<endl;
+            cout<<"\t\t\t--------------------------------------------------------------------------\n";
+        }
+        else
+        {
+                cout<<&M.chercher_client(a);
+
+                                      system ("cls") ;
+                                      break ;
+                                     }
+                                case '6':
+                                      {
+                                      system("cls") ;
+                                      fflush(stdin) ;
+                                      string a,nom; int choix,choixUnique;
+                                      cout<<"\t\t\t--------------------------------------------------------------------------\n";
+                                      cout<<"\t\t\t|                 ****** Modification des aracteristiques du Client ******                  |\n";
+                                      cout<<"\t\t\t--------------------------------------------------------------------------\n";
+                                      cout<<"\t\t\t           Veuillez donner le CIN du client: ";
+                                      cin>>a;
+                                      C=&M.chercher_client(a);
+                                      if C=! NULL
+                                      {
+                                            cout<<"\nSi vous voulez modifier plusieurs champs tapez 0"<<endl; ;
+                                            cout<<"\nSi vous voulez modifier un seul champ tapez 1 \n") ;
+                                            cin>>choix;
+                                      }
+                                          if(choix == 1) {
+
+
+                                            cout<<"\n 1: modifier le nom \n"<<endl;
+                                            cout<<"\n 2: modifier le prenom \n");
+                                            cout<<"\n 3: modifier l'adresse \n");
+                                            cout<<"\n 4: modifier la date de renouvellement \n");
+                                            cin>>choixUnique;
+                                            if(choixUnique==1)
+                                                {
+                                                  cout<<"Quelle est le nouveau nom du client ?"<<endl;
+                                                  cin>>nom;
+                                                  C->set_nom(nom);
+                                                  cout<<" Operation effectuee avec succés, le nouveau nom est: "<<nom<<endl;
+
+                                                }
+                                            if(choixUnique==2)
+                                                {
+                                                  cout<<"Quelle est le nouveau prenom du client ?"<<endl;
+                                                  cin>>prenom;
+                                                  C->set_prenom(prenom);
+                                                  cout<<" Operation effectuee avec succés, le nouveau prenom est: "<<prenom<<endl;
+                                                }
+                                             if(choixUnique==3)
+                                             {
+                                                  cout<<"Quelle est la nouvelle adresse du client ?"<<endl;
+                                                  cin>>adresse;
+                                                  C->set_adresse(adresse);
+                                                  cout<<" Operation effectuee avec succés, le nouvelle adresse est: "<<adresse<<endl;
+
+                                            }
+
+        }
+
+            else{
+                int userChoise ;
+                do{
+
+                        do{
+                            system("cls");
+                            printf("\n 1: modifier le kilometrage de la voiture ");
+                            printf("\n 2: modifier le prix de la voiture");
+                            printf("\n 3: modifier l'etat la voiture");
+                            printf("\n 4: quiter la modification \n");
+                            scanf("%d", &userChoise) ;
+
+                            } while(userChoise!=1&&userChoise!=2&&userChoise!=3&&userChoise!=4) ;
+
+
+                              if(userChoise==1) {
+                                  printf("Quelle est le nouveau kilometrage de la voiture ?");
+                                  scanf( "%d",&v[voitureExiste].kilometrage );
+                                  }
+                              if(userChoise==2) {
+                                  printf("Quelle est le nouveau prix de la voiture ?");
+                                  scanf( "%lf",&v[voitureExiste].Prix_location );
+                                }
+                              if(userChoise==3) {
+                                      printf("Quelle est le nouveau etat de la voiture ?");
+                                      scanf( "%d",&v[voitureExiste].Etat );
+                                    }
+                           }while(userChoise!=4);
+
+                }
+        }
+
+                                      }
+                                      system("cls") ;
+                                      break;
+                                      }
+                                case '7':
+                                    {
+
+
+                                      system("cls");
+                                      fflush(stdin);
+//                                      cout<<"\n Veuillez entrer le cin de client ?"<<endl ;
+//                                      cin >> ci
+//                                      C=chercher_client(int ci);
+//                                      M.renouvelerInscriptionClient(&C);
+                                      system("cls");
+                                      break ;
+                                    }
+                                case '8':
+                                    {
+
+
+                                      system ("cls") ;
+                                      fflush(stdin);
+                                     string a;
+                                     cout<<"\t\t\t--------------------------------------------------------------------------\n";
+                                     cout<<"\t\t\t|               ****** Suppression de Client ******                |\n";
+                                     cout<<"\t\t\t--------------------------------------------------------------------------\n";
+                                     cout<<"\t\t\t           Veuillez remplir les informations suivantes:"<<endl;
+                                     cout<<"\t\t\t     Numero CIN (8 chiffres) du client: ";
+                                     cin>>a;
+                                     M.resilierClient(&M.chercher_client(a));
+                                      system("cls");
+                                      break ;
+                                    }
+                                default :
+                                     c='1';
+                                     break ;
+                                             }
+                                                }
+                    break;
+
+
+
+                case '2':
+                    while (c3 != '0')
+                    {
+                        init_stade();
+                        gotoxy(30, 8);
+                        Color(14);
+                        cout << "choisir l'une des options suivantes" << endl;
+                        gotoxy(30, 9);
+                        cout << "1: Ajouter une audio" << endl;
+                        gotoxy(30, 10);
+                        cout << "2: Ajouter un livre" << endl;
+                        gotoxy(30, 11);
+                        cout << "3: Ajouter une video" << endl;
+                        gotoxy(30, 12);
+                        cout << "4: Rendre consultable document" << endl;
+                        gotoxy(30, 13);
+                        cout << "5: Rendre empruntable document" << endl;
+                        gotoxy(30, 14);
+                        cout << "6: Retirer document" << endl;
+                        gotoxy(30, 15);
+                        cout << "7: Emprunter document" << endl;
+                        gotoxy(30, 16);
+                        cout << "8: Restituer document" << endl;
+                        gotoxy(30, 17);
+                        cout << "9: Trouver les emprunts en retard " << endl;
+                        gotoxy(30, 18);
+                        cout << "10: Afficher les statistiques" << endl;
+                        gotoxy(30, 19);
+                        cout << "0: Retour" << endl;
+                        gotoxy(30, 20);
+                        cout << "Choix:  ";
+                        fflush(stdin);
+                        c3 = getchar();
+                        system("cls");
+
+                                                }
+
+                    }
+                    break;
+                }
+            }
+        }
+
+    return 0;
+}
+
+
